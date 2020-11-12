@@ -2199,7 +2199,6 @@ void intro_message(int colon)
   int i;
   long row;
   long blanklines;
-  int sponsor;
   char *p;
   static char *(lines[]) = {
     N_(NVIM_VERSION_LONG),
@@ -2231,32 +2230,12 @@ void intro_message(int colon)
     blanklines = 0;
   }
 
-  // Show the sponsor and register message one out of four times, the Uganda
-  // message two out of four times.
-  sponsor = (int)time(NULL);
-  sponsor = ((sponsor & 2) == 0) - ((sponsor & 4) == 0);
-
   // start displaying the message lines after half of the blank lines
   row = blanklines / 2;
 
   if (((row >= 2) && (Columns >= 50)) || colon) {
     for (i = 0; i < (int)ARRAY_SIZE(lines); ++i) {
       p = lines[i];
-
-      if (sponsor != 0) {
-        if (strstr(p, "children") != NULL) {
-          p = sponsor < 0
-              ? N_("Sponsor Vim development!")
-              : N_("Become a registered Vim user!");
-        } else if (strstr(p, "iccf") != NULL) {
-          p = sponsor < 0
-              ? N_("type  :help sponsor<Enter>    for information ")
-              : N_("type  :help register<Enter>   for information ");
-        } else if (strstr(p, "Orphans") != NULL) {
-          p = N_("menu  Help->Sponsor/Register  for information    ");
-        }
-      }
-
       if (*p != NUL) {
         do_intro_line(row, (char_u *)_(p), 0);
       }
